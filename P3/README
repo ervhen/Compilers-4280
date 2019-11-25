@@ -1,0 +1,145 @@
+Static Semantics
+Total 100 points.
+
+Invocation:
+> statSem [file]
+with file as before with implicit extension .sp19
+Wrong invocations will not be graded.
+
+Graded 90% execution 10% structure/standards.
+
+Stat Semantics Definition
+
+The only static semantics we impose that can be processed by the compiler (static) are proper use of variables.
+Variables
+Variables have to be defined before used first time (after satisfying syntax)
+Variable name can only be defined once in a scope but can be reused in another scope. There are two options for scope
+Two options for variable scope. You must include README.txt file listing on the first line either Global or Local to indicate your chosen scope option. If this info is missing projects will be tested and graded as global.
+
+Global option for variables (100)
+There is only one scope, the global scope, in the case, regardless of where variable is defined
+Local option for variables (+20)
+Variables outside of a block are global
+Variables in a given block are scoped in this block
+Rules as in C (smaller scope hides the outer/global scope variable)
+Do not display the tree any more (points can be deducted).
+
+
+#############################################
+
+More Tests:(good)
+
+var x1 : 1
+var x2 : 2
+void
+  print x1 ;
+return
+
+---------
+
+var x1: 1
+var x2 : 2
+void
+  var x3 : 3
+  print x3 ;
+return
+
+---------
+
+var x1 : 1 
+var x2 : 2
+void
+  var x3 : 3
+  scan x1 ;
+  print x2 ;
+return
+
+---------
+
+void
+  var x1 : 1
+  var x2 : 2
+  scan x1 ;
+  cond [ x1 + x2 = < 3 ]
+    print x2 ;
+return
+
+----------
+
+var x1 : 1
+void
+  var x2 : 2
+  scan x1 ;
+  cond [ x1 + x2 = < 3 ]
+  void
+    var x3 : 3
+   iter [ 1 < > x3 ] 
+      print x1 ;
+return ; 
+return
+
+
+*********************************************
+*********************************************
+
+
+More Tests:(bad)
+
+var x1 : 1
+var x2 : 2
+var x1 : 3 & var X1 redefined
+void
+  print 1 ;
+return
+
+---------
+
+var x1 : 1
+var x2 : 2
+void
+  var x2 : 3 & var x2 redefined
+  print x1 ;
+return
+
+---------
+
+var x1 : 1
+var x2 : 2
+void
+  print x3 ; & var x3 undefined
+return
+
+----------
+
+var x1 : 1 
+var x2 : 2
+void
+  var x3 : 3
+  scan x1 ;
+  print x4 ; & var x4 undefined
+return
+
+----------
+
+void
+  var x1 : 1
+  var x2 : 2
+  scan x1 ;
+  cond [ x1 + x2 = < x3 ] & var x3 undefined
+    print x2 ;
+return
+
+----------
+
+
+var x1 : 1
+void
+  var x2 : 2
+  scan x3 ; & var x3 undefined
+  cond [ x1 + x2 = < 3 ]
+  void
+    var x3 : 3
+   iter [ 1 < > x3 ] 
+      print x1 ;
+return ; 
+return

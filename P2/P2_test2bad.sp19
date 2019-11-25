@@ -1,0 +1,5 @@
+var x : 1
+var x1 : 2
+void
+  print [ 1 ] ;
+end

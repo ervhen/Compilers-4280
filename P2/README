@@ -1,0 +1,72 @@
+Parser and Tree Builder
+Total 100 points.
+
+Invocation:
+> frontEnd [file]
+with file as before
+Wrong invocations may not be graded.
+
+Graded 90% execution 10% structure/standards.
+
+Verify the project grammar is LL(1) or rewrite as needed in an equivalent form.
+
+Use your scanner module and fix if needed. If you fix any errors that you lost points for on P1, ask to have some points returned after P2 works.
+
+Implement the parser in a separate file (parser.c and parser.h) including the initial auxilary parser() function and all nonterminal functions. Call the parser function from main. The parser function generates error or returns the parse tree to main. In testTree.c (and testTree.h) implement a printing function using preorder traversal with indentations as before for testing purposes (2 spaces per level, print the node's label and any tokens from the node, then children left to right; one node per line). Call the printing function from main immediately after calling the parser and returning the tree. The printing function call must be later removed.
+
+The project P2 will be tested assuming white spaces separate all tokens.
+
+
+
+######################################################
+
+Starting BNF
+----------------------
+P2 BNF
+(Please ensure this uses only tokens detected in your P1, no exceptions)
+
+<program>  ->     <vars> <block>
+<block>       ->      void <vars> <stats> return
+<vars>         ->      empty | var Identifier : Integer <vars>
+<expr>        ->      <A> + <expr> | <A> - <expr> | <A>
+<A>             ->        <N> / <A> | <N>
+<N>             ->       <M> * <N> | <M>
+<M>              ->     % <M> |  <R>
+<R>              ->      ( <expr> ) | Identifier | Integer
+<stats>         ->      <stat> ; <mStat>
+<mStat>       ->      empty |  <stat>  ;  <mStat>
+<stat>           ->      <in> | <out> | <block> | <if> | <loop> | <assign>
+<in>              ->      scan  Identifier
+<out>            ->      print <expr>
+<if>               ->      cond [ <expr> <RO> <expr> ] <stat>
+<loop>          ->      iter [ <expr> <RO> <expr> ] <stat>
+<assign>       ->      Identifier  = <expr>
+<RO>            ->      < | = <  | >  | = > | < >   |   =
+
+------------------------------------------------
+
+My BNF, I changed a few things, to make it LL(1) and to make it fit a BST.
+<program>  ->       <vars> <block>
+<block>         ->      void <vars> <stats> return
+<vars>          ->      empty | var Identifier : Integer <vars> 
+<expr>          ->      <A> <x>
+<x>                 ->      + <expr> | - <expr> | E
+<A>         ->          <N> <Y>
+<Y>                 ->      / <A> |  E
+<N>         ->          <M> <Z>
+<Z>                 ->      * <N> | E 
+<M>         ->      <M> |  <R>
+<R>         ->       <expr> ) | Identifier | Integer
+<stats>     ->          <stat> ; <mStat>
+<mStat>         ->      E |  <stat>  ;  <mStat>
+<stat>          ->      <in> | <out> | <block> | <if> | <loop> | <assign>
+<in>        ->      scan  Identifier 
+<out>           ->      print <expr>
+<if>            ->      cond [ <inner> ] <stat>
+<loop>      ->      iter [ <inner> ] <stat>
+<inner>     ->      <expr> <mid>
+<mid>           ->          <RO> <expr>
+<assign>        ->      Identifier  = <expr>  
+<RO>        ->      < <less> | = <eq> | >
+<less>          ->       > | E
+<eq>            ->          < | > | E      
